@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "943273536676",
+    "project_id": "fotografpaylasmauygulama-c413a",
+    "storage_bucket": "fotografpaylasmauygulama-c413a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:943273536676:android:2852042feddd1607044a31",
+        "android_client_info": {
+          "package_name": "com.mustafaderinoz.fotografpaylasma"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUH23ITfmLEKk7u59k0SAHuZ479ex3ZYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
