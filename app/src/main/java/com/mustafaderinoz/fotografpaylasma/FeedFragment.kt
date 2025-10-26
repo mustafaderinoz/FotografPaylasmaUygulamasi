@@ -5,7 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.mustafaderinoz.fotografpaylasma.databinding.FragmentFeedBinding
 
 class FeedFragment : Fragment() {
@@ -14,6 +19,14 @@ class FeedFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var isFabOpen = false
+    private lateinit var auth: FirebaseAuth
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        auth = Firebase.auth
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,8 +39,10 @@ class FeedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+         //   Toast.makeText(requireContext(), "Bu ekrandan geri gidemezsin.", Toast.LENGTH_SHORT).show()
+        //}
         // Ana FAB tıklaması
-
         binding.fabMenu.setOnClickListener { menu_tiklandi(it) }
 
     }
@@ -37,11 +52,7 @@ class FeedFragment : Fragment() {
         _binding = null
     }
 
-
-
-
-
-    fun menu_tiklandi(view: View){
+    fun menu_tiklandi(view: View) {
         binding.fabMenu.setOnClickListener {
             if (isFabOpen) {
                 closeFabMenu()
@@ -52,7 +63,11 @@ class FeedFragment : Fragment() {
 
         // Alt menü tıklamaları
         binding.menuCikisYap.setOnClickListener {
-            Toast.makeText(requireContext(), "Çıkış butonuna tıklandı", Toast.LENGTH_SHORT).show()
+            auth.signOut()
+            val action = FeedFragmentDirections.actionFeedFragmentToKullaniciFragment()
+            Navigation.findNavController(view).navigate(action)
+            Toast.makeText(requireContext(), "Çıkış yapıldı", Toast.LENGTH_SHORT).show()
+
         }
 
         binding.menuEklemeYap.setOnClickListener {
@@ -98,6 +113,5 @@ class FeedFragment : Fragment() {
             .withEndAction { binding.menuEklemeYap.visibility = View.GONE }
             .start()
     }
-
 
 }
