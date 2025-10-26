@@ -1,17 +1,22 @@
-package com.mustafaderinoz.fotografpaylasma
+package com.mustafaderinoz.fotografpaylasma.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.firestore
+import com.mustafaderinoz.fotografpaylasma.adapter.PostAdapter
 import com.mustafaderinoz.fotografpaylasma.databinding.FragmentFeedBinding
+import com.mustafaderinoz.fotografpaylasma.model.Post
 
 class FeedFragment : Fragment() {
 
@@ -20,11 +25,15 @@ class FeedFragment : Fragment() {
 
     private var isFabOpen = false
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+    val postList:ArrayList<Post> =arrayListOf()
+    private var adapter:PostAdapter?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
+        db = Firebase.firestore
 
     }
 
@@ -45,12 +54,53 @@ class FeedFragment : Fragment() {
         // Ana FAB tıklaması
         binding.fabMenu.setOnClickListener { menu_tiklandi(it) }
 
+        verileriAl()
+
+        adapter=PostAdapter(postList)
+        binding.feedRecylerView.layoutManager=LinearLayoutManager(requireContext())
+        binding.feedRecylerView.adapter=adapter
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun verileriAl(){
+        db.collection("Posts").orderBy("date",Query.Direction.DESCENDING).addSnapshotListener { value, error ->
+            if(error!=null) println(error.localizedMessage)
+            else {
+                if(value!=null){
+                    if(!value.isEmpty){
+                        postList.clear()
+                        val documents=value.documents
+
+                        for (document in documents ){
+                            val email=document.get("email") as String
+                            val comment=document.get("comment") as String
+                            val base64=document.get("base64") as String
+
+                            val post= Post(email,comment,base64)
+                            postList.add(post)
+                        }
+                        adapter?.notifyDataSetChanged()
+                    }
+                }
+
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
     fun menu_tiklandi(view: View) {
         binding.fabMenu.setOnClickListener {
@@ -71,7 +121,8 @@ class FeedFragment : Fragment() {
         }
 
         binding.menuEklemeYap.setOnClickListener {
-            Toast.makeText(requireContext(), "Ekle butonuna tıklandı", Toast.LENGTH_SHORT).show()
+            val action=FeedFragmentDirections.actionFeedFragmentToYuklemeFragment()
+            Navigation.findNavController(requireView()).navigate(action)
         }
     }
 
