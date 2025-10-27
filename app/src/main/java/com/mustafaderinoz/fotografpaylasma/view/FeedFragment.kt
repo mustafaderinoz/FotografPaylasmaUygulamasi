@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,9 +49,7 @@ class FeedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-         //   Toast.makeText(requireContext(), "Bu ekrandan geri gidemezsin.", Toast.LENGTH_SHORT).show()
-        //}
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {}
         // Ana FAB tıklaması
         binding.fabMenu.setOnClickListener { menu_tiklandi(it) }
 
@@ -71,8 +70,7 @@ class FeedFragment : Fragment() {
         db.collection("Posts").orderBy("date",Query.Direction.DESCENDING).addSnapshotListener { value, error ->
             if(error!=null) println(error.localizedMessage)
             else {
-                if(value!=null){
-                    if(!value.isEmpty){
+                if(value != null && !value.isEmpty){
                         postList.clear()
                         val documents=value.documents
 
@@ -85,31 +83,15 @@ class FeedFragment : Fragment() {
                             postList.add(post)
                         }
                         adapter?.notifyDataSetChanged()
-                    }
                 }
 
             }
         }
     }
 
-
-
-
-
-
-
-
-
-
-
     fun menu_tiklandi(view: View) {
-        binding.fabMenu.setOnClickListener {
-            if (isFabOpen) {
-                closeFabMenu()
-            } else {
-                openFabMenu()
-            }
-        }
+        if (isFabOpen) closeFabMenu()
+        else openFabMenu()
 
         // Alt menü tıklamaları
         binding.menuCikisYap.setOnClickListener {
@@ -121,8 +103,10 @@ class FeedFragment : Fragment() {
         }
 
         binding.menuEklemeYap.setOnClickListener {
+            isFabOpen = false
             val action=FeedFragmentDirections.actionFeedFragmentToYuklemeFragment()
             Navigation.findNavController(requireView()).navigate(action)
+
         }
     }
 

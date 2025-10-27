@@ -62,13 +62,7 @@ class KullaniciFragment : Fragment() {
                 Toast.makeText(requireContext(),exception.localizedMessage,Toast.LENGTH_LONG).show()
 
             }
-
-
         }
-
-
-
-
 
     }
 
