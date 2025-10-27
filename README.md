@@ -92,6 +92,7 @@ Veriler **Firebase Firestore** üzerinde, görseller ise **Base64 formatında** 
 **Mustafa Derinöz**
 
 * 📧 E-posta: mustafaderinoz@gmail.com
-* 🔗 LinkedIn: [Mustafa Derinöz'ün LinkedIn Profili](www.linkedin.com/in/mustafaderinoz-431007284)
+* 🔗 LinkedIn: [Mustafa Derinöz'ün LinkedIn Profili](https://www.linkedin.com/in/mustafaderinoz-431007284)
+
 
 
